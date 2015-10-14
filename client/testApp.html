@@ -1,0 +1,231 @@
+<head>
+  <!-- Google that this is a Meteor App -->
+    <meta name="fragment" content="!">
+
+  <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+</head>
+
+<!-- ======================================= -->
+<!--      Main Layout Template               -->
+<!-- ======================================= -->
+<template name="mainLayout">
+    <header>
+        <div class="container">
+            <div class="siteTitle">
+                <h1> <i class="fa fa-clock-o"></i> Time Tracker </h1>
+                <blockquote>
+                    Tracking your time, <br> enabling your productivity.
+                </blockquote>
+            </div>
+            <nav class="actions">
+                <ul>
+                    <li> <a href="/" class="button"> <i class="fa fa-home"></i> <span class="mobile"> Home </span> </a> </li>
+                    <li> <a href="/customer" class="button"> Customers </a> </li>
+                    <li> <a href="/projects" class="button"> Customer Projects </a> </li>
+                    <li> <a href="/timeTracker" class="button"> Track Time </a> </li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <section class="main">
+        <div class="container">
+            {{>yield}}
+        </div>
+    </section>
+
+    <footer>
+        <p> Copyrights 2015 - David Davis - Meteor Test Dev </p>
+    </footer>
+</template>
+
+
+<!-- ======================================= -->
+<!--      Home / Main Landing Page           -->
+<!-- ======================================= -->
+
+<template name="home">
+    <h2> Welcome to Time Tracker </h2>
+    <p> This demonstration application shows the ability of designers to create simple client side web
+    applications as a basis for understanding web application development concepts.  By finishing this
+    application you have passed your introduction to Meteor.  I hope you dive in and continue to learn,
+    but don't stop at this wonderful framework push your knowledge and your comfort level as you go!
+    </p>
+</template>
+
+<!-- ======================================= -->
+<!--      Customers                          -->
+<!-- ======================================= -->
+<template name="customers">
+    <h2> Customer Page </h2>
+
+    <div class="addCustomer">
+        <a href="/addCustomer" class="button"> Add Customers </a>
+    </div>
+
+    <ul class="customerList">
+        {{#each allCustomers}}
+            <li>
+                <div> {{fullname}} </div>
+                <div> {{company}} </div>
+                <div> {{phone}} </div>
+                <div> {{email}} </div>
+                <div> <a href="/editCustomer" class="edit button"> Edit </a> </div>
+                <div> <a href="#delete" class="delete button"> Delete </a> </div>
+            </li>
+        {{/each}}
+    </ul>
+</template>
+
+<template name="addCustomer">
+    <h2> Add New Customer </h2>
+    {{> quickForm collection="Customers" id="addCustomer" type="insert"}}
+</template>
+
+<template name="editCustomer">
+    <h2> Edit Customer </h2>
+    {{> quickForm collection="Customers" id="editCustomer" type="update" doc=customerID}}
+</template>
+
+<!-- ================================================================= -->
+<!--                         Projects                                  -->
+<!-- ================================================================= -->
+
+<template name="projects">
+    <h2> Customer Projects </h2>
+
+    <div class="addProject">
+        <a href="/newProject" class="button"> Add Project </a>
+    </div>
+
+    <div class="projectList">
+        <ul>
+            {{#each allProjects}}
+                <li>
+                    <div> {{name}} </div>
+                    <div> {{projectScope}} </div>
+                    <div> {{completed}} </div>
+                    <div> <a href="/editProject" class="edit button">Edit</a> </div>
+                    <div> <a href="#delete" class="delete button"> Delete </a> </div>
+                </li>
+            {{/each}}
+        </ul>
+    </div>
+</template>
+
+<template name="newProject">
+    <h2> Add New Project </h2>
+    <div class="addNewProject">
+    {{#autoForm collection="CustomerProjects" id="addProject" type="insert"}}
+        <div class="customerSelect">
+            <label> Customer </label>
+            {{> afFieldInput name='customerID' class="customerID" options=customerMenu}}
+        </div>
+        {{> afQuickField name='projectName'}}
+        {{> afQuickField name='scope'}}
+        {{> afQuickField name="completed" type="boolean-select" trueLabel="Yes" falseLabel="No"}}
+        {{> afQuickField name='description' rows=6}}
+        <button type="submit" class="btn btn-primary">Add Project</button>
+    {{/autoForm}}
+    </div>
+</template>
+
+<template name="editProject">
+    <h2> Edit Project </h2>
+    <div class="alert alert-warning" role="alert"> {{feedback}} </div>
+    <div class="editProjectForm">
+    {{#autoForm collection="CustomerProjects" id="addProject" type="update" doc=projectID}}
+        <div class="customerSelect">
+            <label> Customer </label>
+            {{> afFieldInput name='customerID' class="customerID" options=customerMenu}}
+        </div>
+        {{> afQuickField name='projectName'}}
+        {{> afQuickField name='scope'}}
+        {{> afQuickField name="completed" type="boolean-select" trueLabel="Yes" falseLabel="No"}}
+        {{> afQuickField name='description' rows=6}}
+        <button type="submit" class="btn btn-primary">Save Edits</button>
+    {{/autoForm}}
+    </div>
+</template>
+
+
+<!-- ================================================================= -->
+<!--                     Time Tracker                                  -->
+<!-- ================================================================= -->
+
+<template name="timeTracker">
+    <h2> Time Tracker </h2>
+    <a href="#help" class="helpToggle"> <i class="fa fa-question-circle"></i> Help </a>
+
+    <div class="help" style="display:none">
+        <p>
+        This section will be used to keep track of time spent working on a customers project.
+        Get started
+            <ol>
+                <li> Select A Customer <p class="micro"> This will populate the projects menu with that customers projects.</p></li>
+                <li> Select A Project <p class="micro"> This adds allows you to start with the time tracking. </p></li>
+                <li> Start Session and Save Session will take a timestamp of the current time when clicked. </li>
+                <li> <strong> Important: </strong> Nothing is saved until you end time and finish the following form. </li>
+            </ol>
+        </p>
+    </div>
+
+    <div class="feedback">
+        {{feedback}}
+    </div>
+
+    <div class="selectCustomer">
+        <select class="customerMenu">
+            <option value=""> Select A Customer </option>
+            {{#each dropdownCustomer}}
+                <option value="{{id}}">
+                        {{fullname}}
+                </option>
+            {{/each}}
+        </select>
+    </div>
+
+    <div class="selectProject hidden">
+        {{projectFeedback}}
+        <select class="projectMenu">
+            <option value=""> Select A Project </option>
+            {{#each selectProject}}
+                <option value="{{id}}">
+                        {{projectName}}
+                </option>
+            {{/each}}
+        </select>
+    </div>
+
+    <div class="timeTracker">
+        <br><br>
+        <a href="#start" class="btn btn-success startButton disabled success"> Start Session </a>
+        <a href="#stop" class="btn btn-danger stopButton disabled error">  Save Session  </a>
+    </div>
+
+    <form class="projectWork" style="display:none">
+        <div class="projectDetails">
+            {{#autoForm collection="TimeTracker" id="timeTracker" type="insert"}}
+                <div class="hidden">
+                    {{> afQuickField name='projectID' class="projectID"}}
+                    {{> afQuickField name='startTime' class="startTime"}}
+                    {{> afQuickField name='endTime' class="endTime"}}
+                </div>
+                {{> afQuickField name="completed" type="boolean-select" trueLabel="Yes" falseLabel="No"}}
+                {{> afQuickField name='author' class="author"}}
+                {{> afQuickField name='description' rows=6}}
+                <button type="submit">Save Work</button>
+            {{/autoForm}}
+        </div>
+    </form>
+</template>
+
+<!-- ================================================================= -->
+<!--                     Time Tracker                                  -->
+<!-- ================================================================= -->
+
+<template name="404error">
+    <h2> 404 Error </h2>
+    It appears you have reached a 404 Error.
+</template>

@@ -1,0 +1,292 @@
+/* CSS declarations go here */
+@import 'scssLibs/normalize/normalize';
+@import 'scssLibs/bourbon/bourbon';
+@import 'scssLibs/neat/neat';
+@import 'scssLibs/bitters/base';
+
+// fonts
+@import url(https://fonts.googleapis.com/css?family=Montserrat);
+@import url(https://fonts.googleapis.com/css?family=Kaushan+Script);
+$font : 'Montserrat', sans-serif;
+
+
+// Mixin
+@mixin breakpoint($point) {
+    @if $point == desktop {
+        @media (min-width: 70em) { @content ; }
+    }
+    @else if $point == laptop {
+        @media (min-width: 64em) { @content ; }
+    }
+    @else if $point == tablet {
+        @media (min-width: 50em) { @content ; }
+    }
+    @else if $point == phablet {
+        @media (min-width: 37.5em)  { @content ; }
+    }
+    @else {
+        @media (min-width:$point){
+            @content;
+        }
+    }
+}
+
+@mixin reset{
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  -webkit-border-radius: 0px;
+  -moz-border-radius: 0px;
+  border-radius: 0px;
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+  background-image: none;
+  text-shadow: none;
+  border:none;
+}
+
+
+
+
+// Create a Color Pallette
+$accentLight : #ABBDAD;
+$accentBlue : #D2F9FE;
+$primary : #10576B;
+$secondary : #f05f5c;
+$alt :  #63446D;
+
+// feedback
+$error : #F64E45;
+$success: #85B859;
+
+// links
+$action-color:#53aee0;
+$link:#53aee0;
+$hover:darken($link,20%);
+
+.success {
+    background:$success !important;
+}
+
+.error {
+    background:$error !important;
+}
+
+
+html,body {
+    margin:0;
+    padding:0;
+}
+
+body {
+    font-size:1em;
+    font-weight:200;
+    letter-spacing:2px;
+}
+
+.mobile {
+    display:inline-block;
+    @include breakpoint(laptop){
+        display:none;
+    }
+}
+
+.desktop {
+    display:none;
+    @include breakpoint(laptop){
+        display:inline-block;
+    }
+}
+
+.container {
+    max-width:80%;
+    margin:0 auto;
+    @include breakpoint(laptop){
+        @include outer-container();
+    }
+}
+
+.disabled {
+   pointer-events: none;
+   opacity: .1;
+   cursor: default;
+}
+
+.hidden{
+    display:none !important;
+}
+
+a { color: $link;
+    &:hover,&:active,&:visited,&:focus { color:$hover}
+}
+
+.button, button, .btn {
+    transition: all 0.15s ease-out 0s;
+    background: $link;
+    border-radius: 6px;
+    color: white;
+    display: inline-block;
+    font-size: 0.875em;
+    font-weight: bold;
+    letter-spacing: 1px;
+    margin-bottom: 1em;
+    padding: 1em;
+    text-align: center;
+    text-transform: uppercase;
+     &:hover,&:active,&:visited,&:focus { color:#fff; background:$hover;}
+}
+
+
+header, footer {
+    @include span-columns(12);
+    padding:0 10px 10px;
+    background:$primary;
+    color:#fff;
+}
+
+header .siteTitle {
+    @include span-columns(12);
+    text-align:center;
+    h1 { font-size:2em;
+         font-family: 'Kaushan Script', cursive;
+         padding: 10px 0;
+         margin:0;}
+
+    blockquote {
+        font-size:12px;
+        border:none;
+        margin:0;
+        padding-left:45px;
+        font-style: oblique;
+    }
+
+    @include breakpoint(laptop){
+        @include span-columns(4);
+        text-align:left;
+    }
+}
+
+header nav {
+    ul { list-style: none; margin-top:10px;}
+
+    li { display:block;}
+
+    li > a {
+        @include span-columns(12);
+        text-align:center;
+        padding:10px;
+        margin:0 0 10px;
+    }
+
+    @include breakpoint(tablet){
+        @include span-columns(12);
+        @include omega();
+        ul { text-align:center; float:right;}
+        li { display:inline; float:left; width:initial; margin-left:10px;}
+    }
+
+    @include breakpoint(laptop){
+        @include span-columns(8);
+        ul { text-align:right; margin-top:40px; }
+    }
+}
+
+.main {
+    @include span-columns(12);
+    min-height:500px;
+    padding:20px 0;
+}
+
+
+footer {
+    font-size:10px;
+    text-align:center;
+    padding:10px;
+    margin:0;
+    p { padding:0; margin:0;}
+}
+
+.customerList, .projectList {
+    li {
+        @include span-columns(12);
+        background:#eee;
+        border-radius: 6px;
+        margin-bottom:10px;
+
+        div { padding: 5px 10px;
+              border-bottom:1px dotted #ccc;
+        }
+
+        div:first-child {
+            text-align:center;
+            font-weight:bold;
+            text-transform:uppercase;
+            border-radius: 6px 6px 0 0;
+            padding:10px;
+            background:lighten($primary,20%);
+        }
+
+        div:nth-last-child(2), div:last-child {
+            @include span-columns(6);
+            text-align:center;
+            border-bottom:none;
+        }
+
+        div:last-child{
+            @include omega();
+        }
+
+        .edit, .delete {
+            padding:5px;
+            margin:0;
+            @include span-columns(12);
+        }
+
+        .delete {
+            background:$error;
+             &:hover,&:active,&:visited,&:focus { background:darken($error, 20%)}
+        }
+
+        @include breakpoint(tablet){
+            @include span-columns(4);
+            &:nth-of-type(3n){
+                @include omega();
+            }
+        }
+    }
+}
+
+.addCustomer, .addProject {
+    float:right;
+    margin:-50px 0 0;
+}
+
+select{
+    @include reset;
+    @include span-columns(12);
+    position:relative;
+    padding: 10px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+
+    background-image: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4NCjwhLS0gR2VuZXJhdG9yOiBBZG9iZSBJbGx1c3RyYXRvciAxOC4xLjAsIFNWRyBFeHBvcnQgUGx1Zy1JbiAuIFNWRyBWZXJzaW9uOiA2LjAwIEJ1aWxkIDApICAtLT4NCjxzdmcgdmVyc2lvbj0iMS4xIiBpZD0iTGF5ZXJfMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgeD0iMHB4IiB5PSIwcHgiDQoJIHZpZXdCb3g9IjAgMCAyMCAyMCIgZW5hYmxlLWJhY2tncm91bmQ9Im5ldyAwIDAgMjAgMjAiIHhtbDpzcGFjZT0icHJlc2VydmUiPg0KPGc+DQoJPHBhdGggZD0iTTE3LjEsN2MwLDAuMSwwLDAuMi0wLjEsMC4zTDEwLjMsMTRjLTAuMSwwLjEtMC4yLDAuMS0wLjMsMC4xYy0wLjEsMC0wLjIsMC0wLjMtMC4xTDMsNy40QzIuOSw3LjMsMi45LDcuMiwyLjksNw0KCQljMC0wLjEsMC0wLjIsMC4xLTAuM0wzLjgsNkMzLjgsNS45LDQsNS45LDQuMSw1LjljMC4xLDAsMC4yLDAsMC4zLDAuMWw1LjYsNS42TDE1LjYsNmMwLjEtMC4xLDAuMi0wLjEsMC4zLTAuMQ0KCQljMC4xLDAsMC4yLDAsMC4zLDAuMUwxNyw2LjdDMTcuMSw2LjgsMTcuMSw2LjksMTcuMSw3eiIvPg0KPC9nPg0KPC9zdmc+DQo=);
+    background-repeat: no-repeat;
+    background-position: 96% center;
+    background-size:15px;
+    background-color:#fff;
+}
+
+.selectCustomer,.selectProject {
+    @include span-columns(12);
+}
+
+.timeTracker{
+    @include span-columns(12);
+
+    .startButton,.stopButton {
+        @include span-columns(6);
+    }
+    .stopButton{
+        @include omega();
+    }
+}
